@@ -3,15 +3,17 @@
 namespace TaskTracker.Api.Endpoints.Task;
 public class GetAllTasks : IEndpoint
 {
+    // Mapping
     public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapGet("/posts", Handle)
+        .MapGet("/tasks", Handle)
         .WithSummary("Gets all tasks");
 
+    // Request and Response types
     public record Request(
        [FromQuery] Status? WithStatus = null,
        [FromQuery] DateTime? DueBefore = null,
        [FromQuery] OrderByField? OrderBy = null,
-       bool Descending = false
+       [FromQuery] bool Descending = false
     );
     public record Response(
         int Id,
@@ -21,13 +23,12 @@ public class GetAllTasks : IEndpoint
         DateTime DueDate
     );
 
+    //Logic
     private static List<Response> Handle([AsParameters] Request request, ITaskService taskService)
     {
         TaskItem[] tasks = Array.Empty<TaskItem>();
 
-        if (request.WithStatus is null && request.DueBefore is null)
-            tasks = taskService.GetAll();
-        else
+        if (request.WithStatus is not null || request.DueBefore is not null)
         {
             var filterCriteria = new FilterCriteria
             {
@@ -35,6 +36,10 @@ public class GetAllTasks : IEndpoint
                 DueBefore = request.DueBefore
             };
             tasks = taskService.GetFilteredTasks(filterCriteria);
+        }
+        else
+        {
+            tasks = taskService.GetAll();
         }
 
         if (request.OrderBy is not null)

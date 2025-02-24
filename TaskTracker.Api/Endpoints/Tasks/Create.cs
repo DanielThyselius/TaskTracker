@@ -4,7 +4,7 @@ namespace TaskTracker.Api.Endpoints.Tasks;
 public class CreateTask : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapPost("/posts", Handle)
+        .MapPost("/tasks", Handle)
         .WithSummary("Create task");
 
     public record Request(
@@ -23,9 +23,9 @@ public class CreateTask : IEndpoint
             Status = request.Status,
             DueDate = request.DueDate
         };
-        var newTaskId = taskService.Create(newTask);
+        newTask.Id = taskService.Create(newTask);
 
-        return TypedResults.Ok(new Response(newTaskId));
+        return TypedResults.Ok(new Response(newTask.Id));
     }
 }
 

@@ -4,7 +4,7 @@ namespace TaskTracker.Api.Endpoints.Task;
 public class GetTask : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapGet("/posts/{id}", Handle)
+        .MapGet("/tasks/{id}", Handle)
         .WithSummary("Gets a task by id");
 
     public record Request(int Id);

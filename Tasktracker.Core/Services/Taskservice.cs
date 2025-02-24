@@ -47,7 +47,7 @@ namespace TaskTracker.Core.Services
 
         public TaskItem[] GetAll()
         {
-            return _taskItems[1.._nextId];
+            return _taskItems[0.._nextId];
         }
 
         public TaskItem[] GetFilteredTasks(FilterCriteria filterCriteria)
